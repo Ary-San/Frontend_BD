@@ -1,0 +1,77 @@
+# MVP web de ElectroRuta: PostgreSQL 18 con los cuatro escenarios + un PostgREST por escenario.
+name: electroruta-mvp
+
+x-postgrest: &postgrest
+  image: postgrest/postgrest:v12.2.3
+  restart: unless-stopped
+  depends_on:
+    db:
+      condition: service_healthy
+
+x-postgrest-env: &postgrest-env
+  PGRST_DB_SCHEMAS: api
+  PGRST_DB_ANON_ROLE: web_anon
+  PGRST_DB_POOL: 4
+
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?falta POSTGRES_PASSWORD en .env}
+      AUTHENTICATOR_PASSWORD: ${AUTHENTICATOR_PASSWORD:?falta AUTHENTICATOR_PASSWORD en .env}
+    # 5432 y 5433 los ocupan los PostgreSQL nativos de Windows; para pgAdmin usar localhost:5434.
+    ports: ["5434:5432"]
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./dumps:/dumps:ro
+      - ./db:/api:ro
+      - ./db/initdb:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      # Durante la restauración inicial el servidor no escucha por TCP; queda sano al terminar.
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d ev_charge_1m"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 300s
+
+  api-1k:
+    <<: *postgrest
+    environment:
+      <<: *postgrest-env
+      PGRST_DB_URI: postgres://authenticator:${AUTHENTICATOR_PASSWORD}@db:5432/ev_charge_1k
+    ports: ["3001:3000"]
+
+  api-10k:
+    <<: *postgrest
+    environment:
+      <<: *postgrest-env
+      PGRST_DB_URI: postgres://authenticator:${AUTHENTICATOR_PASSWORD}@db:5432/ev_charge_10k
+    ports: ["3002:3000"]
+
+  api-100k:
+    <<: *postgrest
+    environment:
+      <<: *postgrest-env
+      PGRST_DB_URI: postgres://authenticator:${AUTHENTICATOR_PASSWORD}@db:5432/ev_charge_100k
+    ports: ["3003:3000"]
+
+  api-1m:
+    <<: *postgrest
+    environment:
+      <<: *postgrest-env
+      PGRST_DB_URI: postgres://authenticator:${AUTHENTICATOR_PASSWORD}@db:5432/ev_charge_1m
+    ports: ["3004:3000"]
+
+  # La web compilada en http://localhost:8080 (no hace falta Node para usarla).
+  web:
+    build: ./web
+    restart: unless-stopped
+    environment:
+      # 1 = solo lectura (para una versión pública); 0 = completa, como en la exposición.
+      BLOQUEAR_ESCRITURA: ${BLOQUEAR_ESCRITURA:-0}
+    depends_on: [api-1k, api-10k, api-100k, api-1m]
+    ports: ["8080:80"]
+
+volumes:
+  pgdata:

@@ -1,0 +1,10 @@
+# Los scripts y el SQL corren dentro de contenedores Linux: siempre con saltos LF, aunque se
+# clone en Windows con core.autocrlf=true.
+*.sh                text eol=lf
+*.sql               text eol=lf
+*.template          text eol=lf
+Dockerfile          text eol=lf
+docker-compose.yml  text eol=lf
+
+# Dumps de PostgreSQL (formato custom): binarios.
+*.dump              binary

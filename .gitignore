@@ -1,0 +1,12 @@
+# Credenciales locales: se suben solo como .env.example
+.env
+
+# Dependencias y compilados de la web
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Estado local del skill de diseño (mocks, capturas y preguntas)
+.impeccable/mocks/
+.impeccable/review/
+.impeccable/questions/

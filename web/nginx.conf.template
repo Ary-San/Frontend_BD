@@ -1,0 +1,26 @@
+# BLOQUEAR_ESCRITURA=1 (versión pública): todo POST responde 403. Eso deja fuera Operación, las
+# pruebas de reglas y el Laboratorio, que cambian índices o escriben filas. La web no hace otros POST.
+map $request_method $escritura_bloqueada {
+    default 0;
+    POST    ${BLOQUEAR_ESCRITURA};
+}
+
+server {
+    listen 80;
+    root /usr/share/nginx/html;
+    default_type application/json;
+
+    # A nivel de server: se evalúa antes de elegir cualquier location, incluidas las anidadas.
+    if ($escritura_bloqueada) {
+        return 403 '{"message":"Esta versión pública es de solo lectura.","hint":"Operación y Laboratorio funcionan en la copia local del grupo (docker compose up)."}';
+    }
+
+    location / {
+        try_files $uri /index.html;
+    }
+
+    location /api/1k/   { proxy_pass http://api-1k:3000/;   proxy_read_timeout 120s; }
+    location /api/10k/  { proxy_pass http://api-10k:3000/;  proxy_read_timeout 120s; }
+    location /api/100k/ { proxy_pass http://api-100k:3000/; proxy_read_timeout 120s; }
+    location /api/1m/   { proxy_pass http://api-1m:3000/;   proxy_read_timeout 120s; }
+}

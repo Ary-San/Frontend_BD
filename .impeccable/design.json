@@ -1,0 +1,119 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-17T22:20:00-05:00",
+  "title": "Design System: ElectroRuta",
+  "extensions": {
+    "colorMeta": {
+      "pizarra": { "role": "neutral", "displayName": "Pizarra", "canonical": "#0f1720", "tonalRamp": ["#05080b", "#0b121a", "#0f1720", "#1b2633", "#2a3746", "#4a5a6b", "#9aa7b5", "#e6ebf0"] },
+      "ambar-tablero": { "role": "primary", "displayName": "Ámbar de Tablero", "canonical": "#f5b700", "tonalRamp": ["#1a1400", "#4d3a00", "#8a6800", "#c79600", "#f5b700", "#ffcb3d", "#ffe08a", "#fff4d6"] },
+      "verde-servicio": { "role": "secondary", "displayName": "Verde de Servicio", "canonical": "#2fbf71", "tonalRamp": ["#0b2418", "#143326", "#1d6b43", "#27985d", "#2fbf71", "#5dd393", "#86e6b4", "#d6f7e5"] },
+      "rojo-falla": { "role": "tertiary", "displayName": "Rojo de Falla", "canonical": "#e5484d", "tonalRamp": ["#22090a", "#3a1719", "#7a2427", "#b2363a", "#e5484d", "#f07175", "#ffa3a6", "#ffe1e2"] },
+      "tinta-hueso": { "role": "neutral", "displayName": "Tinta Hueso", "canonical": "#f2efe6", "tonalRamp": ["#3b3a36", "#5f5d57", "#86837b", "#aba89f", "#cfccc3", "#e3e0d7", "#f2efe6", "#fbfaf6"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Título de cada vista." },
+      "headline": { "displayName": "Headline", "purpose": "Códigos de estación y de consulta, títulos de panel." },
+      "label": { "displayName": "Label", "purpose": "Cabeceras de columna y rótulos sobre cifras, en mayúsculas." },
+      "flap": { "displayName": "Flap", "purpose": "Dígitos tabulares dentro de las celdas de paleta." },
+      "code": { "displayName": "Code", "purpose": "SQL y línea de fuente; sin ligaduras." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease-tablero", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Transiciones de color, foco y atenuación de filas (200–250 ms)." },
+      { "name": "giro-paleta", "value": "45ms por paso, asentado de izquierda a derecha", "purpose": "Giro de las celdas al cambiar una cifra; desactivado con prefers-reduced-motion." }
+    ],
+    "breakpoints": [
+      { "name": "celular", "value": "760px" },
+      { "name": "una-columna", "value": "1180px" },
+      { "name": "proyector", "value": "1400px" },
+      { "name": "pantalla-baja", "value": "max-height 800px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Celda de paleta",
+      "kind": "custom",
+      "refersTo": "flap-cell",
+      "description": "Cifra clave en celdas partidas; gira al cambiar el dato.",
+      "html": "<span class=\"ds-paleta\"><span>2</span><span>0</span><span>,</span><span>0</span><span>0</span><span>2</span></span>",
+      "css": ".ds-paleta { display: inline-flex; gap: 0.08em; font: 600 34px/1 'Barlow Condensed', 'Arial Narrow', sans-serif; font-variant-numeric: tabular-nums; } .ds-paleta span { display: inline-block; width: 0.74em; padding: 0.12em 0 0.1em; text-align: center; border-radius: 0.09em; color: #f2efe6; background: linear-gradient(#1b2633 0 calc(50% - 1px), #070c12 calc(50% - 1px) calc(50% + 1px), #1b2633 0); }"
+    },
+    {
+      "name": "Botón principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "La única acción principal de la vista (Ejecutar).",
+      "html": "<button class=\"ds-btn\">Ejecutar Q1</button>",
+      "css": ".ds-btn { border: 0; border-radius: 4px; background: #f5b700; color: #111; padding: 10px 22px; font: 700 18px 'Barlow Condensed', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; transition: filter 0.2s cubic-bezier(0.16,1,0.3,1), transform 0.2s; } .ds-btn:hover { filter: brightness(1.08); } .ds-btn:active { transform: translateY(1px); } .ds-btn:focus-visible { outline: 2px solid #f5b700; outline-offset: 2px; }"
+    },
+    {
+      "name": "Selector de escenario",
+      "kind": "nav",
+      "refersTo": "scenario-segment",
+      "description": "Control segmentado 1k/10k/100k/1M.",
+      "html": "<div class=\"ds-seg\"><button>1k</button><button>10k</button><button>100k</button><button aria-pressed=\"true\">1M</button></div>",
+      "css": ".ds-seg { display: inline-flex; border: 1px solid #2a3746; border-radius: 4px; overflow: hidden; background: #0b121a; } .ds-seg button { border: 0; border-right: 1px solid #2a3746; background: transparent; padding: 7px 15px; font: 600 17px 'Barlow Condensed', sans-serif; letter-spacing: 0.04em; color: #9aa7b5; cursor: pointer; } .ds-seg button:last-child { border-right: 0; } .ds-seg button:hover { color: #f2efe6; background: #1b2633; } .ds-seg button[aria-pressed='true'] { background: #f5b700; color: #111; } .ds-seg button:focus-visible { outline: 2px solid #f5b700; outline-offset: -2px; }"
+    },
+    {
+      "name": "Pestañas",
+      "kind": "nav",
+      "description": "Navegación principal de la barra superior.",
+      "html": "<nav class=\"ds-tabs\"><a aria-current=\"page\">Red de carga</a><a>Consultas</a></nav>",
+      "css": ".ds-tabs { display: flex; gap: 28px; background: #0b121a; padding: 0 16px; } .ds-tabs a { padding: 20px 0 17px; font: 600 18px 'Barlow Condensed', sans-serif; letter-spacing: 0.06em; text-transform: uppercase; color: #9aa7b5; border-bottom: 3px solid transparent; cursor: pointer; } .ds-tabs a:hover { color: #f2efe6; } .ds-tabs a[aria-current='page'] { color: #f2efe6; border-bottom-color: #f5b700; }"
+    },
+    {
+      "name": "Chips de estado",
+      "kind": "chip",
+      "refersTo": "chip-servicio",
+      "description": "Estado de estación o conector: forma y color a la vez.",
+      "html": "<span class=\"ds-chip ok\">Operativa</span> <span class=\"ds-chip espera\">Mantenimiento</span> <span class=\"ds-chip falla\">Fuera de servicio</span>",
+      "css": ".ds-chip { display: inline-flex; font: 700 15px/1 'Barlow Condensed', sans-serif; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 9px; border-radius: 3px; } .ds-chip.ok { background: #143326; color: #86e6b4; } .ds-chip.espera { border: 2px solid #f5b700; color: #f5b700; padding: 2px 7px; } .ds-chip.falla { background: #3a1719; color: #ffa3a6; text-decoration: line-through; }"
+    },
+    {
+      "name": "Marcas de estado",
+      "kind": "custom",
+      "description": "Celdas de estado de conector: llena, hueca, tachada.",
+      "html": "<span class=\"ds-marcas\"><i class=\"ok\"></i><i class=\"espera\"></i><i class=\"falla\"></i></span>",
+      "css": ".ds-marcas { display: inline-flex; gap: 4px; } .ds-marcas i { display: inline-block; width: 13px; height: 18px; border-radius: 2px; } .ds-marcas .ok { background: #2fbf71; } .ds-marcas .espera { border: 2px solid #f5b700; } .ds-marcas .falla { border: 2px solid #e5484d; background: linear-gradient(to top right, transparent calc(50% - 1.5px), #e5484d calc(50% - 1.5px) calc(50% + 1.5px), transparent 0); }"
+    },
+    {
+      "name": "Campo de parámetro",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Fechas y número de sesión de las consultas.",
+      "html": "<label class=\"ds-campo\">Sesión<input type=\"number\" value=\"10\"></label>",
+      "css": ".ds-campo { display: grid; gap: 5px; font: 600 13px 'Barlow Condensed', sans-serif; letter-spacing: 0.12em; text-transform: uppercase; color: #9aa7b5; } .ds-campo input { background: #1b2633; border: 1px solid #2a3746; border-radius: 4px; padding: 8px 10px; font: 500 17px 'Barlow', sans-serif; color: #f2efe6; width: 120px; font-variant-numeric: tabular-nums; } .ds-campo input:hover { border-color: #3a4a5c; } .ds-campo input:focus-visible { outline: 2px solid #f5b700; outline-offset: 2px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Tablero de Salidas",
+    "overview": "La red de carga se lee como el tablero de vuelos de una terminal: cada estación es una fila, cada código va en ámbar y las cifras que importan caen en celdas de paleta partidas que giran carácter a carácter cuando el dato cambia. El tablero existe para leerse desde lejos, y eso es lo que pide su escena real: una laptop proyectada en un aula con las luces encendidas, y un docente que mira desde el fondo. Es una herramienta, no un cartel: el mundo aporta tipografía, paleta, densidad y un único gesto propio; los controles son los web de siempre. Cada panel declara al pie de qué vista o función SQL salen sus datos y cuánto tardó la respuesta.",
+    "keyCharacteristics": [
+      "Pizarra azul-negra mate con tinta hueso; ámbar solo para códigos, selección y la acción principal.",
+      "Celdas de paleta partidas para las cifras clave, alineadas a la derecha en ancho fijo.",
+      "Estado dicho por forma y color a la vez: celda llena, hueca o tachada.",
+      "Fuente SQL al pie de cada panel, en monoespaciada.",
+      "Densidad de tablero: filas de ~33 px, 20 estaciones visibles a 1440×900."
+    ],
+    "rules": [
+      { "name": "The Ámbar Escaso Rule", "body": "El ámbar marca identidad (códigos) y la única acción principal de cada vista. Nunca rellena superficies ni decora.", "section": "colors" },
+      { "name": "The Estado Con Forma Rule", "body": "Ningún estado depende solo del color: disponible es una celda llena, ocupado una celda hueca con borde ámbar, averiado una celda tachada en rojo. El proyector lava los colores; la forma sobrevive.", "section": "colors" },
+      { "name": "The Dígito Tabular Rule", "body": "Toda cifra que se compara va con números tabulares y alineada a la derecha; las celdas de paleta tienen ancho fijo para que la columna no se mueva al girar.", "section": "typography" },
+      { "name": "The Mono Solo Para SQL Rule", "body": "La monoespaciada aparece solo donde hay código o medición (SQL, nombre de vista, milisegundos). No es un disfraz de «técnico».", "section": "typography" },
+      { "name": "The Plano Mate Rule", "body": "Nada flota: sin sombras, sin brillos, sin vidrio. Un tablero real es mate.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do poner al pie de cada panel la vista o función SQL de la que salen los datos y el tiempo de respuesta, en monoespaciada.",
+      "Do usar celdas de paleta solo para las cifras que el docente debe leer desde lejos.",
+      "Do decir cada estado con forma y texto además del color.",
+      "Do mantener 20 filas de estación visibles a 1440×900.",
+      "Do descartar los datos de un escenario al cambiar a otro: nunca mostrar una base bajo el nombre de otra."
+    ],
+    "donts": [
+      "Don't convertir la app en un panel de administración con barra lateral y tarjetas de KPI.",
+      "Don't usar sombras, degradados decorativos o brillos de neón sobre la pizarra.",
+      "Don't pasar todo el texto a celdas de paleta: la paleta es para cifras clave, no para nombres ni tablas completas.",
+      "Don't mostrar un tiempo que no sea medido: el de Consultas es ida y vuelta desde el navegador y se rotula así."
+    ]
+  }
+}
